@@ -1,0 +1,12 @@
+{
+    "crackedusernameprefix": "BOT",
+    "ip": "server.com",
+    "port": 25565,
+    "version": "1.12.2",
+    "loginintervalms": 1000,
+    "rejoinintervalms": 5000,
+    "altening": false,
+    "altening_token": "",
+    "physics": false,
+    "password": "p@ssword123" 
+}
