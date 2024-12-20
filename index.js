@@ -38,6 +38,13 @@ function createBot(initialNumber) {
         bot.chat(`/login ${config.password}`);
       }, 1000); // Tunggu sebentar sebelum mengirimkan perintah
 
+      // Mulai spam chat jika diaktifkan
+      if (config.enableSpam) {
+        setInterval(() => {
+          bot.chat(config.spamMessage);
+        }, config.spamIntervalMs);
+      }
+
       // Rejoin setelah waktu tertentu
       setTimeout(() => {
         bot.quit("Rejoining...");

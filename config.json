@@ -9,5 +9,8 @@
     "altening_token": "",
     "physics": false,
     "password": "p@ssword123", 
-    "maxActiveBots": 5 
+    "maxActiveBots": 5, 
+    "enableSpam": true, 
+    "spamMessage": "spam", 
+    "spamIntervalMs": 3000 
 }
