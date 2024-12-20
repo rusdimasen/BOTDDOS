@@ -9,7 +9,8 @@
     "altening_token": "",
     "physics": false,
     "password": "p@ssword123",
-    "enableSpam": true,          
-    "spamMessage": "spam", 
-    "spamIntervalMs": 3000      
+    "enableSpam": false,
+    "spamMessage": "Hello World!",
+    "spamIntervalMs": 3000,
+    "maxActiveBots": 5 
 }

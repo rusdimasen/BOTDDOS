@@ -35,6 +35,8 @@ Berikut adalah parameter yang dapat Anda ubah dalam file konfigurasi: BOT100
 <br>**physics**
   Apakah fitur fisika akan diaktifkan? (Mungkin diperlukan jika server memiliki anti-cheat)
   Direkomendasikan untuk tetap diatur ke `false` agar performa optimal
+<br>**maxActiveBots** 
+   Maksimum bot akan join pada waktu bersamaan minimal `5`
 
 Harap gunakan alat ini dengan bijak dan sesuai etika!
 
