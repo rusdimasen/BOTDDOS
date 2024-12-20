@@ -1,7 +1,8 @@
 const mineflayer = require("mineflayer");
-const config = require("./config.json");
-let number = 100;
+const config = require("./config.js");
+let number = 100; // Nomor awal untuk username bot
 let activeBots = [];
+let rejoinAttempts = {}; // Catat percobaan rejoin
 
 function getRandomDelay(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -24,57 +25,58 @@ function createBot(botNumber) {
   });
 
   activeBots.push(bot);
+  rejoinAttempts[botNumber] = 0; // Reset percobaan rejoin
 
-  bot.on("login", () => {
-    console.log(`Bot ${bot.username} logged in.`);
+  bot.once("spawn", () => {
+    console.log(`Bot ${bot.username} spawned.`);
     setTimeout(() => {
       bot.chat(`/register ${config.password} ${config.password}`);
       bot.chat(`/login ${config.password}`);
     }, config.loginintervalms);
 
-    // Simulasi Gerakan Random
-    setInterval(() => {
-      const x = Math.random() * 2 - 1;
-      const z = Math.random() * 2 - 1;
-      bot.setControlState("forward", true);
-      bot.lookAt(bot.entity.position.offset(x, 0, z), true);
-      setTimeout(() => {
-        bot.setControlState("forward", false);
-      }, getRandomDelay(500, 1500));
-    }, getRandomDelay(5000, 10000));
-
-    // Fitur Spam jika diaktifkan
     if (config.enableSpam) {
       setInterval(() => {
         bot.chat(config.spamMessage);
         console.log(`Bot ${bot.username} spamming: ${config.spamMessage}`);
       }, config.spamIntervalMs);
     }
+
+    setInterval(() => {
+      const x = Math.random() * 2 - 1;
+      const z = Math.random() * 2 - 1;
+      bot.setControlState("forward", true);
+      bot.lookAt(bot.entity.position.offset(x, 0, z), true);
+      setTimeout(() => bot.setControlState("forward", false), getRandomDelay(500, 1500));
+    }, getRandomDelay(5000, 10000));
   });
 
-  // Mendeteksi Kicked
-  bot.on("kicked", (reason, loggedIn) => {
-    console.log(`Bot ${bot.username} was kicked: ${reason}`);
-    activeBots = activeBots.filter((b) => b !== bot);
+  bot.on("kicked", (reason) => {
+    console.log(`Bot ${bot.username} was kicked: ${reason}.`);
+    rejoin(botNumber);
   });
 
   bot.on("end", () => {
-    activeBots = activeBots.filter((b) => b !== bot);
     console.log(`Bot ${bot.username} disconnected.`);
+    rejoin(botNumber);
   });
 
-  // Proteksi Deteksi Plugin
-  bot.on("packet", (data, metadata) => {
-    if (metadata.name === "tab_complete") {
-      console.log("Detected suspicious packet: tab_complete.");
-      return; // Blokir tab complete
-    }
+  bot.on("error", (err) => {
+    console.error(`Bot ${bot.username} error: ${err}`);
+    rejoin(botNumber);
   });
+
+  function rejoin(botNumber) {
+    activeBots = activeBots.filter((b) => b !== bot);
+    if (rejoinAttempts[botNumber] < 5) { // Maksimal 5 kali percobaan
+      rejoinAttempts[botNumber]++;
+      setTimeout(() => createBot(botNumber), config.rejoinintervalms);
+    } else {
+      console.error(`Bot ${botNumber} gagal rejoin setelah 5 kali percobaan.`);
+    }
+  }
 }
 
 // Buat Bot dengan Delay Konfigurasi
 for (let i = 0; i < config.maxActiveBots; i++) {
-  setTimeout(() => {
-    createBot(number + i);
-  }, getRandomDelay(config.rejoinintervalms, config.rejoinintervalms + 2000));
+  setTimeout(() => createBot(number + i), i * config.rejoinintervalms);
 }
