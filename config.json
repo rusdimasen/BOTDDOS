@@ -5,9 +5,15 @@
     "version": "1.12.2",
     "loginintervalms": 1000,
     "rejoinintervalms": 5000,
+    "altening": false,
+    "altening_token": "",
+    "physics": false,
     "password": "p@ssword123",
     "maxActiveBots": 5,
     "enableSpam": true,
     "spamMessage": "spam",
-    "spamIntervalMs": 3000
+    "spamIntervalMs": 3000,
+    "enableMovement": true,
+    "movementIntervalMin": 5000,
+    "movementIntervalMax": 10000
 }
