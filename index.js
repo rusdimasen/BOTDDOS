@@ -1,18 +1,10 @@
 const mineflayer = require("mineflayer");
 const config = require("./config.json");
-let number = 100; // Nomor awal untuk username bot
-let activeBots = []; // Array untuk melacak bot yang sedang aktif
-let ipIndex = 0; // Indeks untuk IP yang sedang digunakan
-
-function getNextIP() {
-  // Dapatkan IP berikutnya dari daftar
-  const ip = config.ipList[ipIndex];
-  ipIndex = (ipIndex + 1) % config.ipList.length; // Beralih ke IP berikutnya (circular)
-  return ip;
-}
+let number = 100;
+let activeBots = [];
 
 function getRandomDelay(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min; // Delay acak
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function createBot(botNumber) {
@@ -24,11 +16,8 @@ function createBot(botNumber) {
     }
   }
 
-  const ip = getNextIP(); // Pilih IP dari daftar
-  console.log(`Using IP: ${ip}`);
-
   const bot = mineflayer.createBot({
-    host: ip,
+    host: config.ip,
     port: config.port,
     username: `${config.crackedusernameprefix}${botNumber}`,
     version: config.version,
@@ -37,47 +26,36 @@ function createBot(botNumber) {
   activeBots.push(bot);
 
   bot.on("login", () => {
-    console.log(`Bot ${bot.username} logged in at ${ip}.`);
-
+    console.log(`Bot ${bot.username} logged in.`);
     setTimeout(() => {
       bot.chat(`/register ${config.password} ${config.password}`);
       bot.chat(`/login ${config.password}`);
-    }, getRandomDelay(1000, 3000)); // Kirim perintah dengan delay acak
+    }, getRandomDelay(500, 1500));
 
-    // Spam chat jika diaktifkan
-    if (config.enableSpam) {
-      setInterval(() => {
-        bot.chat(`${config.spamMessage} ${Math.random().toString(36).substring(7)}`); // Pesan dengan teks acak
-      }, getRandomDelay(3000, 6000)); // Interval acak
-    }
-
-    // Simulasi gerakan untuk menghindari deteksi bot
+    // Simulasi Gerakan Random
     setInterval(() => {
-      const x = Math.random() * 2 - 1; // Gerakan acak pada sumbu X
-      const z = Math.random() * 2 - 1; // Gerakan acak pada sumbu Z
+      const x = Math.random() * 2 - 1;
+      const z = Math.random() * 2 - 1;
       bot.setControlState("forward", true);
       bot.lookAt(bot.entity.position.offset(x, 0, z), true);
       setTimeout(() => {
         bot.setControlState("forward", false);
       }, getRandomDelay(500, 1500));
     }, getRandomDelay(5000, 10000));
-
-    // Rejoin setelah waktu tertentu
-    setTimeout(() => {
-      bot.quit("Rejoining...");
-      activeBots = activeBots.filter((b) => b !== bot);
-      createBot(botNumber + config.maxActiveBots);
-    }, config.rejoinintervalms);
   });
 
-  bot.on("kicked", (reason) => {
+  // Mendeteksi Kicked
+  bot.on("kicked", (reason, loggedIn) => {
     console.log(`Bot ${bot.username} was kicked: ${reason}`);
     activeBots = activeBots.filter((b) => b !== bot);
   });
 
-  bot.on("error", (err) => {
-    console.log(`Bot ${bot.username} encountered an error: ${err.message}`);
-    activeBots = activeBots.filter((b) => b !== bot);
+  // Proteksi Deteksi Plugin
+  bot.on("packet", (data, metadata) => {
+    if (metadata.name === "tab_complete") {
+      console.log("Detected suspicious packet: tab_complete.");
+      return; // Blokir tab complete
+    }
   });
 
   bot.on("end", () => {
@@ -85,6 +63,9 @@ function createBot(botNumber) {
   });
 }
 
+// Buat Bot dengan IP Random
 for (let i = 0; i < config.maxActiveBots; i++) {
-  createBot(number + i);
+  setTimeout(() => {
+    createBot(number + i);
+  }, getRandomDelay(1000, 5000));
 }
