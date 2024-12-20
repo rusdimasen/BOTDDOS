@@ -18,10 +18,16 @@ Berikut adalah parameter yang dapat Anda ubah dalam file konfigurasi: BOT100
   Versi server Minecraft yang akan menjadi target bot
 <br>**loginintervalms**
   Interval waktu untuk setiap bot masuk ke server, dalam milidetik
+<br>**rejoinintervalms**
+   Interval waktu untuk setiap bot reinjoin!, dalam milidetik Jadikan milidetiknya default! jangan di ganti!
 <br>**altening**
   Apakah akan menggunakan layanan **TheAltening**? Nilai dapat berupa `true` atau `false`
 <br>**altening_token**
   Token API dari layanan TheAltening (jika digunakan)
+<br>**password**
+   Memukinkan bot lolos dari pemerisaan
+<br>**enableSpam**
+   Mengaktifkan spam ke server akan tujuh tergantung `true` berati nyalah `false` berarti mati
 <br>**spammessage**
   Pesan yang akan dikirim secara berulang (spam) ke server Minecraft
 <br>**spaminterval**
@@ -33,5 +39,5 @@ Berikut adalah parameter yang dapat Anda ubah dalam file konfigurasi: BOT100
 Harap gunakan alat ini dengan bijak dan sesuai etika!
 
 ## Pemilik!
-<br>Pemilik script https://github.com/rusdimasen 
-<br> Terinspirasi dari @moom0o
+<br>Pemilik script https://github.com/rusdimasen
+<br>@rusdimasen
