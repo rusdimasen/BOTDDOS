@@ -30,7 +30,7 @@ function createBot(botNumber) {
     setTimeout(() => {
       bot.chat(`/register ${config.password} ${config.password}`);
       bot.chat(`/login ${config.password}`);
-    }, getRandomDelay(500, 1500));
+    }, config.loginintervalms);
 
     // Simulasi Gerakan Random
     setInterval(() => {
@@ -42,12 +42,25 @@ function createBot(botNumber) {
         bot.setControlState("forward", false);
       }, getRandomDelay(500, 1500));
     }, getRandomDelay(5000, 10000));
+
+    // Fitur Spam jika diaktifkan
+    if (config.enableSpam) {
+      setInterval(() => {
+        bot.chat(config.spamMessage);
+        console.log(`Bot ${bot.username} spamming: ${config.spamMessage}`);
+      }, config.spamIntervalMs);
+    }
   });
 
   // Mendeteksi Kicked
   bot.on("kicked", (reason, loggedIn) => {
     console.log(`Bot ${bot.username} was kicked: ${reason}`);
     activeBots = activeBots.filter((b) => b !== bot);
+  });
+
+  bot.on("end", () => {
+    activeBots = activeBots.filter((b) => b !== bot);
+    console.log(`Bot ${bot.username} disconnected.`);
   });
 
   // Proteksi Deteksi Plugin
@@ -57,15 +70,11 @@ function createBot(botNumber) {
       return; // Blokir tab complete
     }
   });
-
-  bot.on("end", () => {
-    activeBots = activeBots.filter((b) => b !== bot);
-  });
 }
 
-// Buat Bot dengan IP Random
+// Buat Bot dengan Delay Konfigurasi
 for (let i = 0; i < config.maxActiveBots; i++) {
   setTimeout(() => {
     createBot(number + i);
-  }, getRandomDelay(1000, 5000));
+  }, getRandomDelay(config.rejoinintervalms, config.rejoinintervalms + 2000));
 }
