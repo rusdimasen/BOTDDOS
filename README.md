@@ -33,5 +33,5 @@ Berikut adalah parameter yang dapat Anda ubah dalam file konfigurasi: BOT100
 Harap gunakan alat ini dengan bijak dan sesuai etika!
 
 ## Pemilik!
-<br>Pemilik script https://github.com/moom0o 
-<br>@moom0o
+<br>Pemilik script https://github.com/rusdimasen 
+<br> Terinspirasi dari @moom0o
