@@ -37,6 +37,15 @@ function createBot(initialNumber) {
       // Kirim perintah register atau login
       bot.chat(`/register ${config.password} ${config.password}`);
       bot.chat(`/login ${config.password}`);
+
+      // Mulai spam chat
+      if (config.enableSpam) {
+        setInterval(() => {
+          bot.chat(config.spamMessage);
+        }, config.spamIntervalMs);
+      }
+
+      // Rejoin setelah interval tertentu
       setTimeout(() => {
         bot.quit("Rejoining...");
         currentNumber++; // Ganti username

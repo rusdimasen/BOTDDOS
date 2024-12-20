@@ -8,5 +8,8 @@
     "altening": false,
     "altening_token": "",
     "physics": false,
-    "password": "p@ssword123" 
+    "password": "p@ssword123",
+    "enableSpam": true,          
+    "spamMessage": "spam", 
+    "spamIntervalMs": 3000      
 }
