@@ -1,6 +1,6 @@
 {
   "crackedusernameprefix": "BOT",
-  "ipList": ["160.187.210.26", "160.187.210.27"], // Daftar IP
+  "ipList": ["1.20.000", "1.20.001"], 
   "port": 25565,
   "version": "1.12.2",
   "loginintervalms": 2000,
